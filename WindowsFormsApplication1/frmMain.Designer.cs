@@ -41,6 +41,10 @@
             this.progressBarX1 = new DevComponents.DotNetBar.Controls.ProgressBarX();
             this.buttonX1 = new DevComponents.DotNetBar.ButtonX();
             this.sideNavPanel2 = new DevComponents.DotNetBar.Controls.SideNavPanel();
+            this.chkPerformBackup = new DevComponents.DotNetBar.Controls.CheckBoxX();
+            this.labelX3 = new DevComponents.DotNetBar.LabelX();
+            this.txtDomain = new DevComponents.DotNetBar.Controls.TextBoxX();
+            this.lblDomain = new DevComponents.DotNetBar.LabelX();
             this.buttonX4 = new DevComponents.DotNetBar.ButtonX();
             this.buttonX3 = new DevComponents.DotNetBar.ButtonX();
             this.checkBoxX2 = new DevComponents.DotNetBar.Controls.CheckBoxX();
@@ -58,8 +62,6 @@
             this.separator1 = new DevComponents.DotNetBar.Separator();
             this.sideNavItem2 = new DevComponents.DotNetBar.Controls.SideNavItem();
             this.sideNavItem3 = new DevComponents.DotNetBar.Controls.SideNavItem();
-            this.txtDomain = new DevComponents.DotNetBar.Controls.TextBoxX();
-            this.lblDomain = new DevComponents.DotNetBar.LabelX();
             this.sideNav1.SuspendLayout();
             this.sideNavPanel1.SuspendLayout();
             this.panelEx1.SuspendLayout();
@@ -74,8 +76,8 @@
             // 
             // sideNav1
             // 
-            this.sideNav1.Controls.Add(this.sideNavPanel2);
             this.sideNav1.Controls.Add(this.sideNavPanel1);
+            this.sideNav1.Controls.Add(this.sideNavPanel2);
             this.sideNav1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.sideNav1.EnableClose = false;
             this.sideNav1.EnableMaximize = false;
@@ -102,7 +104,6 @@
             this.sideNavPanel1.Name = "sideNavPanel1";
             this.sideNavPanel1.Size = new System.Drawing.Size(698, 359);
             this.sideNavPanel1.TabIndex = 2;
-            this.sideNavPanel1.Visible = false;
             // 
             // labelX1
             // 
@@ -189,12 +190,13 @@
             // 
             // 
             this.progressBarX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.progressBarX1.Location = new System.Drawing.Point(6, 110);
+            this.progressBarX1.Location = new System.Drawing.Point(6, 111);
             this.progressBarX1.Name = "progressBarX1";
             this.progressBarX1.Size = new System.Drawing.Size(119, 23);
             this.progressBarX1.TabIndex = 1;
             this.progressBarX1.Text = "Downloading...";
             this.progressBarX1.TextVisible = true;
+            this.progressBarX1.Visible = false;
             // 
             // buttonX1
             // 
@@ -213,6 +215,8 @@
             // 
             // sideNavPanel2
             // 
+            this.sideNavPanel2.Controls.Add(this.chkPerformBackup);
+            this.sideNavPanel2.Controls.Add(this.labelX3);
             this.sideNavPanel2.Controls.Add(this.txtDomain);
             this.sideNavPanel2.Controls.Add(this.lblDomain);
             this.sideNavPanel2.Controls.Add(this.buttonX4);
@@ -233,6 +237,66 @@
             this.sideNavPanel2.Name = "sideNavPanel2";
             this.sideNavPanel2.Size = new System.Drawing.Size(698, 359);
             this.sideNavPanel2.TabIndex = 6;
+            this.sideNavPanel2.Visible = false;
+            // 
+            // chkPerformBackup
+            // 
+            this.chkPerformBackup.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.chkPerformBackup.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.chkPerformBackup.Location = new System.Drawing.Point(37, 262);
+            this.chkPerformBackup.Name = "chkPerformBackup";
+            this.chkPerformBackup.Size = new System.Drawing.Size(216, 23);
+            this.chkPerformBackup.Style = DevComponents.DotNetBar.eDotNetBarStyle.StyleManagerControlled;
+            this.chkPerformBackup.TabIndex = 15;
+            this.chkPerformBackup.Text = "Perform Backup of Game Before Install";
+            // 
+            // labelX3
+            // 
+            this.labelX3.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.labelX3.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.labelX3.FontBold = true;
+            this.labelX3.Location = new System.Drawing.Point(11, 233);
+            this.labelX3.Name = "labelX3";
+            this.labelX3.Size = new System.Drawing.Size(96, 23);
+            this.labelX3.TabIndex = 14;
+            this.labelX3.Text = "General:";
+            // 
+            // txtDomain
+            // 
+            this.txtDomain.BackColor = System.Drawing.Color.White;
+            // 
+            // 
+            // 
+            this.txtDomain.Border.Class = "TextBoxBorder";
+            this.txtDomain.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.txtDomain.DisabledBackColor = System.Drawing.Color.White;
+            this.txtDomain.Enabled = false;
+            this.txtDomain.ForeColor = System.Drawing.Color.Black;
+            this.txtDomain.Location = new System.Drawing.Point(120, 140);
+            this.txtDomain.Name = "txtDomain";
+            this.txtDomain.PreventEnterBeep = true;
+            this.txtDomain.Size = new System.Drawing.Size(70, 20);
+            this.txtDomain.TabIndex = 4;
+            // 
+            // lblDomain
+            // 
+            this.lblDomain.BackColor = System.Drawing.Color.Transparent;
+            // 
+            // 
+            // 
+            this.lblDomain.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.lblDomain.Enabled = false;
+            this.lblDomain.Location = new System.Drawing.Point(60, 137);
+            this.lblDomain.Name = "lblDomain";
+            this.lblDomain.Size = new System.Drawing.Size(54, 23);
+            this.lblDomain.TabIndex = 13;
+            this.lblDomain.Text = "Domain:";
             // 
             // buttonX4
             // 
@@ -454,6 +518,7 @@
             // 
             // sideNavItem2
             // 
+            this.sideNavItem2.Checked = true;
             this.sideNavItem2.Name = "sideNavItem2";
             this.sideNavItem2.Panel = this.sideNavPanel1;
             this.sideNavItem2.Symbol = "";
@@ -461,44 +526,12 @@
             // 
             // sideNavItem3
             // 
-            this.sideNavItem3.Checked = true;
             this.sideNavItem3.ItemAlignment = DevComponents.DotNetBar.eItemAlignment.Far;
             this.sideNavItem3.Name = "sideNavItem3";
             this.sideNavItem3.Panel = this.sideNavPanel2;
             this.sideNavItem3.Symbol = "";
             this.sideNavItem3.Text = "Settings";
             this.sideNavItem3.Click += new System.EventHandler(this.sideNavItem3_Click);
-            // 
-            // txtDomain
-            // 
-            this.txtDomain.BackColor = System.Drawing.Color.White;
-            // 
-            // 
-            // 
-            this.txtDomain.Border.Class = "TextBoxBorder";
-            this.txtDomain.Border.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.txtDomain.DisabledBackColor = System.Drawing.Color.White;
-            this.txtDomain.Enabled = false;
-            this.txtDomain.ForeColor = System.Drawing.Color.Black;
-            this.txtDomain.Location = new System.Drawing.Point(120, 140);
-            this.txtDomain.Name = "txtDomain";
-            this.txtDomain.PreventEnterBeep = true;
-            this.txtDomain.Size = new System.Drawing.Size(70, 20);
-            this.txtDomain.TabIndex = 4;
-            // 
-            // lblDomain
-            // 
-            this.lblDomain.BackColor = System.Drawing.Color.Transparent;
-            // 
-            // 
-            // 
-            this.lblDomain.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.lblDomain.Enabled = false;
-            this.lblDomain.Location = new System.Drawing.Point(60, 137);
-            this.lblDomain.Name = "lblDomain";
-            this.lblDomain.Size = new System.Drawing.Size(54, 23);
-            this.lblDomain.TabIndex = 13;
-            this.lblDomain.Text = "Domain:";
             // 
             // frmMain
             // 
@@ -550,5 +583,7 @@
         private DevComponents.DotNetBar.ButtonX buttonX4;
         private DevComponents.DotNetBar.Controls.TextBoxX txtDomain;
         private DevComponents.DotNetBar.LabelX lblDomain;
+        private DevComponents.DotNetBar.Controls.CheckBoxX chkPerformBackup;
+        private DevComponents.DotNetBar.LabelX labelX3;
     }
 }

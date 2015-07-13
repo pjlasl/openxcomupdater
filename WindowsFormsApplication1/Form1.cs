@@ -23,95 +23,7 @@ namespace WindowsFormsApplication1
         private void button1_Click(object sender, EventArgs e)
         {
 
-            //HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-
-            HtmlAgilityPack.HtmlWeb website = new HtmlAgilityPack.HtmlWeb();
-            HtmlAgilityPack.HtmlDocument rootDocument = website.Load("http://openxcom.org/git-builds/");
-
-            //doc.LoadHtml("http://openxcom.org/git-builds/");
-
-            ListViewGroup gLatest = new ListViewGroup("Latest");
-            ListViewGroup gArchive = new ListViewGroup("Archive");
-            int iCount = 0;
-
-            this.listView1.Groups.Add(gLatest);
-            this.listView1.Groups.Add(gArchive);
-
-            ListViewItem item = null;
-            Boolean isHeader = false;
-            foreach (HtmlAgilityPack.HtmlNode link in rootDocument.DocumentNode.SelectNodes("//div[@class='text']"))
-             {
-                // Console.Write(link.InnerHtml);
-                 foreach (HtmlAgilityPack.HtmlNode p in link.ChildNodes)
-                 {
-                     
-                     if (!p.FirstChild.Name.Equals("strong")) {
-                         String display = p.ChildNodes[0].InnerHtml;
-                         display = display.Replace(".zip", "");
-                         item = new ListViewItem(display, 0);
-                         if (iCount == 0)
-                         {
-                             item.Group = gLatest;
-                         }
-                         else
-                         {
-                             item.Group = gArchive;
-                         }
-
-                         //item.Tag = match.Value;
-
-                         this.listView1.Items.Add(item);
-                         iCount++;
-                     }
-                     else
-                     {
-                         item.Tag += p.InnerText;
-                     }
-
-                     
-                 }
-                 
-               
-             }
-
-
-            //StringBuilder sb = new StringBuilder();
-            //string html = null;
-
-            //using (WebClient wc = new WebClient())
-            //{
-            //    //ICredentials credentials = new NetworkCredential("pleaf", "sting0413", "tti");
-            //    //IWebProxy webProxy = new WebProxy("http://proxyanon.ttiinc.com:8080");
-            //    //webProxy.Credentials = credentials;
-            //    //wc.Proxy = webProxy;
-            //    html = wc.DownloadString("http://openxcom.org/git-builds/");
-            //}
-            //Regex regx = new Regex("http://openxcom.org\\/git_builds([a-zA-Z0-9\\~\\!\\@\\#\\$\\%\\^\\&amp;\\*\\(\\)_\\-\\=\\+\\\\\\/\\?\\.\\:\\;\\,]*)?", RegexOptions.IgnoreCase);            
-            //MatchCollection matches = regx.Matches(html);
-
-            //ListViewGroup gLatest = new ListViewGroup("Latest");
-            //ListViewGroup gArchive = new ListViewGroup("Archive");
-            //int iCount = 0;
-
-            //this.listView1.Groups.Add(gLatest);
-            //this.listView1.Groups.Add(gArchive);
-
-            //foreach (Match match in matches)
-            //{
-            //    String display = match.Value.Remove(0,51);
-            //    display = display.Replace(".zip", "");
-            //    ListViewItem item = new ListViewItem(display,0);
-            //    if (iCount == 0) {
-            //        item.Group = gLatest;
-            //    } else {
-            //        item.Group = gArchive;
-            //    }
-
-            //    item.Tag = match.Value;
-                
-            //    this.listView1.Items.Add(item);
-            //    iCount++;
-            //}
+            
 
         }
 
@@ -140,7 +52,7 @@ namespace WindowsFormsApplication1
                 }
             });
             thread.Start();
-            
+
 
             //using (Ionic.Zip.ZipFile z = Ionic.Zip.ZipFile.Read("c:\\dev\\redo.zip"))
             //{

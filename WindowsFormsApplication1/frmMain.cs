@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using DevComponents.DotNetBar;
 using System.Threading;
 using System.Net;
+using System.IO;
 
 namespace WindowsFormsApplication1
 {
@@ -17,6 +18,8 @@ namespace WindowsFormsApplication1
         {
             InitializeComponent();
         }
+        
+        private String fullPath;
 
         private void buttonX2_Click(object sender, EventArgs e)
         {
@@ -92,12 +95,26 @@ namespace WindowsFormsApplication1
 
         private void buttonX1_Click(object sender, EventArgs e)
         {
+
+            if (this.listView1.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("A nightly version was not selected...process cancelled.");
+                return;
+            }
+
+            if (!Directory.Exists("c:\\program files\\openxcom"))
+            {
+                MessageBox.Show("Game not found...process cancelled.");
+                return;
+            }
+
             this.progressBarX1.Visible = true;
 
             ListViewItem item = this.listView1.SelectedItems[0];
-            String http = item.SubItems[1].Text;
+            String http = item.SubItems[1].Text;            
+            String fileName = System.IO.Path.GetFileName(new Uri(http).LocalPath);
 
-            String folderPath;
+            String folderPath;            
 
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
@@ -110,7 +127,10 @@ namespace WindowsFormsApplication1
                     return;
                 }
             }
-            
+
+            fullPath = String.Format("{0}\\{1}", folderPath, fileName);
+
+            this.progressBarX1.Text = "Initializing...";
 
             Thread thread = new Thread(() =>
             {
@@ -135,23 +155,22 @@ namespace WindowsFormsApplication1
                     }
                     
                     wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-                    wc.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
-
-                    Uri httpUri = new Uri(http);
-
-                    String fileName = System.IO.Path.GetFileName(httpUri.LocalPath);
-                    String fullPath = String.Format("{0}\\{1}", folderPath, fileName);
+                    wc.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);                    
+                                                          
                     wc.DownloadFileAsync(new Uri(http), fullPath);
 
                 }
             });
-            thread.Start();
+            thread.Start();                        
+                
+                          
         }
 
         void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
         {
             this.BeginInvoke((MethodInvoker)delegate
             {
+                this.progressBarX1.Text = "Downloading...";
                 double bytesIn = double.Parse(e.BytesReceived.ToString());
                 double totalBytes = double.Parse(e.TotalBytesToReceive.ToString());
                 double percentage = bytesIn / totalBytes * 100;
@@ -161,11 +180,54 @@ namespace WindowsFormsApplication1
         void client_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
         {
             this.BeginInvoke((MethodInvoker)delegate
-            {
-                MessageBox.Show("Complete");
+            {                
+                this.progressBarX1.Value = 0;
+                this.progressBarX1.Text = "Installing...";
+                this.progressBarX1.Refresh();
+
+                if (this.chkPerformBackup.Checked)
+                {
+                    using (Ionic.Zip.ZipFile z = new Ionic.Zip.ZipFile())
+                    {
+                        z.AddDirectory("c:\\program files\\openxcom");
+                        z.Save(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\openxcom_backup.zip");
+                    }
+                }                
+
+                using (Ionic.Zip.ZipFile z = Ionic.Zip.ZipFile.Read(fullPath))
+                {
+
+                    //z.ExtractProgress += new EventHandler<Ionic.Zip.ExtractProgressEventArgs>(this.client_Extract);
+
+                    double itemCount = 0.0;
+                    double totalCount = z.Entries.Count;
+                    double percentage = itemCount / totalCount * 100;
+
+                    foreach (Ionic.Zip.ZipEntry entry in z)
+                    {
+                        itemCount++;                        
+                        if (!entry.FileName.Contains("openxcom/UFO") && !entry.FileName.Contains("openxcom/TFTD"))
+                        {
+                            entry.Extract("c:\\program files", Ionic.Zip.ExtractExistingFileAction.OverwriteSilently);                            
+                        }
+
+                        Console.WriteLine(int.Parse(Math.Truncate(percentage).ToString()));
+
+                        //this.progressBarX1.Value = int.Parse(Math.Truncate(percentage).ToString());
+             
+                    }
+                }
+
+                MessageBox.Show("Installation Complete");
+
+                this.progressBarX1.Visible = false;
             });
         }
 
+        void client_Extract(object sender, Ionic.Zip.ExtractProgressEventArgs e)
+        {
+            
+        }
         
         private void sideNavItem3_Click(object sender, EventArgs e)
         {
@@ -199,7 +261,7 @@ namespace WindowsFormsApplication1
 
         private void buttonX3_Click(object sender, EventArgs e)
         {
-            Properties.Settings.Default.proxyUrl = this.txtProxyUrl.Text;
+            Properties.Settings.Default.proxyUrl = this.txtProxyUrl.Text.Replace("http://","").Replace("https://","");
             Properties.Settings.Default.proxyPort = Convert.ToInt32(this.txtProxyPort.Text);
             Properties.Settings.Default.proxyDomain = this.txtDomain.Text;
             Properties.Settings.Default.proxyUser = this.txtProxyUserId.Text;
