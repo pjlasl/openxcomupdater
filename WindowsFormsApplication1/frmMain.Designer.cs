@@ -33,8 +33,10 @@
             this.styleManager1 = new DevComponents.DotNetBar.StyleManager(this.components);
             this.sideNav1 = new DevComponents.DotNetBar.Controls.SideNav();
             this.sideNavPanel1 = new DevComponents.DotNetBar.Controls.SideNavPanel();
+            this.advTree1 = new DevComponents.AdvTree.AdvTree();
+            this.nodeConnector1 = new DevComponents.AdvTree.NodeConnector();
+            this.elementStyle1 = new DevComponents.DotNetBar.ElementStyle();
             this.labelX1 = new DevComponents.DotNetBar.LabelX();
-            this.listView1 = new System.Windows.Forms.ListView();
             this.panelEx1 = new DevComponents.DotNetBar.PanelEx();
             this.buttonX2 = new DevComponents.DotNetBar.ButtonX();
             this.panelEx2 = new DevComponents.DotNetBar.PanelEx();
@@ -64,6 +66,7 @@
             this.sideNavItem3 = new DevComponents.DotNetBar.Controls.SideNavItem();
             this.sideNav1.SuspendLayout();
             this.sideNavPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.advTree1)).BeginInit();
             this.panelEx1.SuspendLayout();
             this.panelEx2.SuspendLayout();
             this.sideNavPanel2.SuspendLayout();
@@ -95,8 +98,8 @@
             // 
             // sideNavPanel1
             // 
+            this.sideNavPanel1.Controls.Add(this.advTree1);
             this.sideNavPanel1.Controls.Add(this.labelX1);
-            this.sideNavPanel1.Controls.Add(this.listView1);
             this.sideNavPanel1.Controls.Add(this.panelEx1);
             this.sideNavPanel1.Controls.Add(this.panelEx2);
             this.sideNavPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -105,13 +108,47 @@
             this.sideNavPanel1.Size = new System.Drawing.Size(698, 359);
             this.sideNavPanel1.TabIndex = 2;
             // 
+            // advTree1
+            // 
+            this.advTree1.AccessibleRole = System.Windows.Forms.AccessibleRole.Outline;
+            this.advTree1.AllowDrop = true;
+            this.advTree1.BackColor = System.Drawing.SystemColors.Window;
+            // 
+            // 
+            // 
+            this.advTree1.BackgroundStyle.Class = "TreeBorderKey";
+            this.advTree1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.advTree1.Dock = System.Windows.Forms.DockStyle.Left;
+            this.advTree1.LicenseKey = "F962CEC7-CD8F-4911-A9E9-CAB39962FC1F";
+            this.advTree1.Location = new System.Drawing.Point(0, 38);
+            this.advTree1.Name = "advTree1";
+            this.advTree1.NodesConnector = this.nodeConnector1;
+            this.advTree1.NodeStyle = this.elementStyle1;
+            this.advTree1.PathSeparator = ";";
+            this.advTree1.Size = new System.Drawing.Size(290, 321);
+            this.advTree1.Styles.Add(this.elementStyle1);
+            this.advTree1.TabIndex = 30;
+            this.advTree1.Text = "advTree1";
+            this.advTree1.View = DevComponents.AdvTree.eView.Tile;
+            this.advTree1.CellSelected += new DevComponents.AdvTree.AdvTreeCellEventHandler(this.advTree1_CellSelected);
+            // 
+            // nodeConnector1
+            // 
+            this.nodeConnector1.LineColor = System.Drawing.SystemColors.ControlText;
+            // 
+            // elementStyle1
+            // 
+            this.elementStyle1.CornerType = DevComponents.DotNetBar.eCornerType.Square;
+            this.elementStyle1.Name = "elementStyle1";
+            this.elementStyle1.TextColor = System.Drawing.SystemColors.ControlText;
+            // 
             // labelX1
             // 
             // 
             // 
             // 
             this.labelX1.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square;
-            this.labelX1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.labelX1.Dock = System.Windows.Forms.DockStyle.Right;
             this.labelX1.Location = new System.Drawing.Point(296, 38);
             this.labelX1.Name = "labelX1";
             this.labelX1.PaddingLeft = 5;
@@ -119,18 +156,6 @@
             this.labelX1.Size = new System.Drawing.Size(270, 321);
             this.labelX1.TabIndex = 22;
             this.labelX1.TextLineAlignment = System.Drawing.StringAlignment.Near;
-            // 
-            // listView1
-            // 
-            this.listView1.Dock = System.Windows.Forms.DockStyle.Left;
-            this.listView1.Location = new System.Drawing.Point(0, 38);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(296, 321);
-            this.listView1.TabIndex = 23;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.SmallIcon;
-            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged_1);
             // 
             // panelEx1
             // 
@@ -544,6 +569,7 @@
             this.sideNav1.ResumeLayout(false);
             this.sideNav1.PerformLayout();
             this.sideNavPanel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.advTree1)).EndInit();
             this.panelEx1.ResumeLayout(false);
             this.panelEx2.ResumeLayout(false);
             this.sideNavPanel2.ResumeLayout(false);
@@ -566,7 +592,6 @@
         private DevComponents.DotNetBar.Controls.SideNavItem sideNavItem3;
         private DevComponents.DotNetBar.ButtonX buttonX2;
         private DevComponents.DotNetBar.LabelX labelX1;
-        private System.Windows.Forms.ListView listView1;
         private DevComponents.DotNetBar.Controls.ProgressBarX progressBarX1;
         private DevComponents.DotNetBar.LabelX lblUrl;
         private DevComponents.DotNetBar.LabelX labelX2;
@@ -585,5 +610,8 @@
         private DevComponents.DotNetBar.LabelX lblDomain;
         private DevComponents.DotNetBar.Controls.CheckBoxX chkPerformBackup;
         private DevComponents.DotNetBar.LabelX labelX3;
+        private DevComponents.AdvTree.AdvTree advTree1;
+        private DevComponents.AdvTree.NodeConnector nodeConnector1;
+        private DevComponents.DotNetBar.ElementStyle elementStyle1;
     }
 }

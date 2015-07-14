@@ -9,6 +9,7 @@ using DevComponents.DotNetBar;
 using System.Threading;
 using System.Net;
 using System.IO;
+using DevComponents.AdvTree;
 
 namespace WindowsFormsApplication1
 {
@@ -20,6 +21,14 @@ namespace WindowsFormsApplication1
         }
         
         private String fullPath;
+
+        private Node createChildNode(String nodeText, String subText, Image image, ElementStyle subItemStyle) 
+        {
+            Node childNode = new Node(nodeText);
+            childNode.Image = image;
+            childNode.Cells.Add(new Cell(subText,subItemStyle));
+            return childNode;
+        }
 
         private void buttonX2_Click(object sender, EventArgs e)
         {
@@ -35,68 +44,88 @@ namespace WindowsFormsApplication1
                 rootDocument = website.Load("http://openxcom.org/git-builds/");                
             }            
             
-            ListViewGroup gLatest = new ListViewGroup("Latest");
-            ListViewGroup gArchive = new ListViewGroup("Archive");
             int iCount = 0;
 
-            this.listView1.Groups.Add(gLatest);
-            this.listView1.Groups.Add(gArchive);
+            ElementStyle groupStyle = new ElementStyle();
+            groupStyle.TextColor = Color.Navy;
+            groupStyle.Font =  new Font(this.advTree1.Font.FontFamily, 9.5F);
+            groupStyle.Name = "groupstyle";
+            advTree1.Styles.Add(groupStyle);
 
-            ListViewItem item = null;
+            // Define sub-item style, simply to make text gray
+            ElementStyle subItemStyle = new ElementStyle();
+            subItemStyle.TextColor = Color.Gray;
+            subItemStyle.Name = "subitemstyle";
+            advTree1.Styles.Add(subItemStyle);
+
+            Node gnLatest = new Node("Latest", groupStyle);
+            gnLatest.Expanded = true;
+            advTree1.Nodes.Add(gnLatest);
+
+            Node gnArchive = new Node("Archive", groupStyle);
+            gnArchive.Expanded = false;
+            advTree1.Nodes.Add(gnArchive);
+
             //Boolean isHeader = false;
+            Node item = null;
+            List<String> items = null;
             foreach (HtmlAgilityPack.HtmlNode link in rootDocument.DocumentNode.SelectNodes("//div[@class='text']"))
             {
+                
                 // Console.Write(link.InnerHtml);
                 foreach (HtmlAgilityPack.HtmlNode p in link.ChildNodes)
                 {
-
+                    
                     if (!p.FirstChild.Name.Equals("strong"))
                     {
-                        String display = p.ChildNodes[0].InnerHtml;
+                        String display = p.ChildNodes[0].InnerHtml.Replace("openxcom_git_master_","");
+                        String subText = p.ChildNodes[1].InnerHtml.Replace("- ","");
                         display = display.Replace(".zip", "");
 
                         String url = p.ChildNodes[0].Attributes[0].Value;
-                        item = new ListViewItem(display);
-                        item.SubItems.Add(url);
-                        //if (iCount == 0)
-                        //{
-                        //    item.Group = gLatest;
-                        //}
-                        //else
-                        //{
-                        //    item.Group = gArchive;
-                        //}
+                        items = new List<String>();
+                        items.Add(url);
 
-                        //item.Tag = match.Value;
+                        item = createChildNode(display, subText, (Image)Properties.Resources.ResourceManager.GetObject("openxcom24"), subItemStyle);
+                       
+                        if (iCount == 0)
+                        {
+                            gnLatest.Nodes.Add(item);
+                        }
+                        else
+                        {
+                            gnArchive.Nodes.Add(item);
+                        }
 
-                        this.listView1.Items.Add(item);
                         iCount++;
+                        item.Tag = items;
                     }
                     else
                     {
-                        item.Tag += p.InnerHtml;
+                        items.Add(p.InnerHtml);
+                        
                     }
-
-
                 }
+
+                
 
                 
             }
         }
 
-        private void listView1_ItemSelectionChanged_1(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void advTree1_CellSelected(object sender, AdvTreeCellEventArgs e)
         {
-            
-            String test = Convert.ToString(e.Item.Tag).Replace("<br>","<br/>");
-            
-            this.labelX1.Text = test;
-            
+            List<String> items = (List<String>)e.Cell.Tag;
+
+            if (items == null) return;
+     
+            this.labelX1.Text = Convert.ToString(items[1].ToString()).Replace("<br>", "<br/>");
         }
 
         private void buttonX1_Click(object sender, EventArgs e)
         {
 
-            if (this.listView1.SelectedItems.Count == 0)
+            if (this.advTree1.SelectedNodes.Count == 0)
             {
                 MessageBox.Show("A nightly version was not selected...process cancelled.");
                 return;
@@ -110,11 +139,12 @@ namespace WindowsFormsApplication1
 
             this.progressBarX1.Visible = true;
 
-            ListViewItem item = this.listView1.SelectedItems[0];
-            String http = item.SubItems[1].Text;            
+            Node item = this.advTree1.SelectedNode;
+            List<String> items = (List<String>)item.Tag;
+            String http = items[0].ToString();
             String fileName = System.IO.Path.GetFileName(new Uri(http).LocalPath);
 
-            String folderPath;            
+            String folderPath;
 
             using (FolderBrowserDialog fbd = new FolderBrowserDialog())
             {
@@ -142,21 +172,21 @@ namespace WindowsFormsApplication1
                         ICredentials credentials;
                         if (Properties.Settings.Default.proxyDomain.Equals(""))
                         {
-                            credentials= new NetworkCredential(Properties.Settings.Default.proxyUser, Properties.Settings.Default.proxyPwd);
+                            credentials = new NetworkCredential(Properties.Settings.Default.proxyUser, Properties.Settings.Default.proxyPwd);
                         }
                         else
                         {
                             credentials = new NetworkCredential(Properties.Settings.Default.proxyUser, Properties.Settings.Default.proxyPwd, "tti");
                         }
 
-                        IWebProxy webProxy = new WebProxy(String.Format("{0}:{1}",Properties.Settings.Default.proxyUrl, Properties.Settings.Default.proxyPort));
+                        IWebProxy webProxy = new WebProxy(String.Format("{0}:{1}", Properties.Settings.Default.proxyUrl, Properties.Settings.Default.proxyPort));
                         webProxy.Credentials = credentials;
                         wc.Proxy = webProxy;
                     }
-                    
+
                     wc.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
-                    wc.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);                    
-                                                          
+                    wc.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
+
                     wc.DownloadFileAsync(new Uri(http), fullPath);
 
                 }
@@ -197,24 +227,12 @@ namespace WindowsFormsApplication1
                 using (Ionic.Zip.ZipFile z = Ionic.Zip.ZipFile.Read(fullPath))
                 {
 
-                    //z.ExtractProgress += new EventHandler<Ionic.Zip.ExtractProgressEventArgs>(this.client_Extract);
-
-                    double itemCount = 0.0;
-                    double totalCount = z.Entries.Count;
-                    double percentage = itemCount / totalCount * 100;
-
                     foreach (Ionic.Zip.ZipEntry entry in z)
-                    {
-                        itemCount++;                        
+                    {                      
                         if (!entry.FileName.Contains("openxcom/UFO") && !entry.FileName.Contains("openxcom/TFTD"))
                         {
                             entry.Extract("c:\\program files", Ionic.Zip.ExtractExistingFileAction.OverwriteSilently);                            
                         }
-
-                        Console.WriteLine(int.Parse(Math.Truncate(percentage).ToString()));
-
-                        //this.progressBarX1.Value = int.Parse(Math.Truncate(percentage).ToString());
-             
                     }
                 }
 
@@ -274,6 +292,8 @@ namespace WindowsFormsApplication1
         {
             this.txtProxyPassword.UseSystemPasswordChar = !this.txtProxyPassword.UseSystemPasswordChar;
         }
+
+        
         
     }
 }
